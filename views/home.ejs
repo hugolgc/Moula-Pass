@@ -97,8 +97,7 @@
               <div>
                 <% let other = transaction.to == session.id ? users.find(user => user.id == transaction.from) : users.find(user => user.id == transaction.to) %>
                 <h3 class="text-xl font-semibold capitalize"><%= `${ other.firstName } ${ other.lastName }` %></h3>
-                <% let moment = new Date(transaction.date) %>
-                <p class="text-sm text-black/50"><%= moment.toLocaleDateString('fr-FR') %></p>
+                <p class="text-sm text-black/50"><%= (new Date(transaction.date)).toLocaleDateString('fr-FR') %></p>
               </div>
               <h4 class="font-semibold"><%= (transaction.to == session.id ? '+' : '-') + transaction.amount.toLocaleString('fr') %>€</h4>
             </li>
@@ -178,7 +177,7 @@
                 <li class="flex justify-between items-center bg-white px-6 py-4 rounded-2xl">
                   <div>
                     <h3 class="text-xl font-semibold capitalize">${ data.to.firstName } ${ data.to.lastName }</h3>
-                    <p class="text-sm text-black/50">${ data.date.toLocaleDateString('fr-FR') }</p>
+                    <p class="text-sm text-black/50">${ (new Date(data.date)).toLocaleDateString('fr-FR') }</p>
                   </div>
                   <h4 class="font-semibold">-${ data.amount.toLocaleString('fr') }€</h4>
                 </li>
@@ -189,7 +188,7 @@
                 <li class="flex justify-between items-center bg-white px-6 py-4 rounded-2xl">
                   <div>
                     <h3 class="text-xl font-semibold capitalize">${ data.from.firstName } ${ data.from.lastName }</h3>
-                    <p class="text-sm text-black/50">${ data.date.toLocaleDateString('fr-FR') }</p>
+                    <p class="text-sm text-black/50">${ (new Date(data.date)).toLocaleDateString('fr-FR') }</p>
                   </div>
                   <h4 class="font-semibold">+${ data.amount.toLocaleString('fr') }€</h4>
                 </li>
