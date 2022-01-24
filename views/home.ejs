@@ -1,0 +1,231 @@
+<% let input = 'w-full h-12 px-4 bg-white/25 rounded-lg placeholder:text-white text-white text-xl font-medium tracking-wide outline-white' %>
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moula Pass | Votre compte</title>
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="/home.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body onload="app()" class="min-h-screen p-6 bg-gray-100 tracking-wide">
+    <figure id="qrcode" onclick="qrcode()" class="hidden fixed top-0 right-0 bottom-0 left-0 flex p-6 bg-black/75 cursor-pointer">
+      <div class="m-auto p-3 bg-white rounded-xl">
+        <img
+          src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=<%= session.id %>"
+          alt="QRCode de <%= `${ session.firstName } ${ session.lastName }` %>"
+        />
+      </div>
+    </figure>
+    <form id="transaction" method="post" onsubmit="handleSubmit()" class="hidden fixed top-0 right-0 bottom-0 left-0 flex p-6">
+      <div onclick="transaction()" class="absolute top-0 right-0 bottom-0 left-0 bg-black/75"></div>
+      <div class="z-10 w-full max-w-xs m-auto p-3 space-y-3 bg-white rounded-2xl">
+        <div class="relative pl-3 pr-12 bg-gray-100 rounded-xl">
+          <input
+            id="to"
+            required
+            type="text"
+            maxlength="12"
+            placeholder="ID du bénificiaire"
+            class="w-full h-12 bg-transparent font-semibold outline-none"
+          />
+          <span id="scan" class="absolute inset-y-0 right-0 flex items-center pr-3 cursor-pointer">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+          </span>
+        </div>
+        <video id="video" class="hidden aspect-square object-cover bg-gray-100 rounded-xl active_scan"></video>
+        <label  class="hidden block relative active_scan">
+          <select id="sources" class="hidden w-full h-12 pl-3 pr-10 bg-gray-100 rounded-xl font-semibold outline-none appearance-none"></select>
+          <span class="absolute inset-y-0 right-0 flex items-center pr-3">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+            </svg>
+          </span>
+        </label>
+        <input
+          id="amount"
+          required
+          type="number"
+          min="<%= amount ? 1 : 0 %>"
+          max="<%= amount %>"
+          step="1"
+          placeholder="Montant"
+          class="w-full h-12 px-3 bg-gray-100 rounded-xl font-semibold outline-none"
+        />
+        <button type="submit" class="w-full h-12 flex justify-center items-center font-semibold">
+          <span role="send">Envoyer</span>
+          <span role="load" class="hidden">
+            <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-black" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+          </span>
+        </button>
+      </div>
+    </form>
+    <div class="max-w-md mx-auto">
+      <header class="flex justify-between items-center">
+        <div class="flex flex-col-reverse">
+          <h1 class="text-xl font-semibold capitalize"><%= `${ session.firstName } ${ session.lastName }` %></h1>
+          <h2 class="text-sm text-black/50">Bonjour</h2>
+        </div>
+        <div onclick="transaction()" class="h-12 w-12 flex justify-center items-center bg-white rounded-xl text-gray-800 cursor-pointer">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM6.293 6.707a1 1 0 010-1.414l3-3a1 1 0 011.414 0l3 3a1 1 0 01-1.414 1.414L11 5.414V13a1 1 0 11-2 0V5.414L7.707 6.707a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+          </svg>
+        </div>
+      </header>
+      <main>
+        <article class="my-12 flex p-6 bg-gradient-to-tr from-zinc-900 to-zinc-700 rounded-2xl text-white">
+          <div>
+            <h3 id="money" class="text-3xl font-semibold"><%= amount.toLocaleString('fr') %>€</h3>
+            <p onclick="qrcode()" class="mt-2 mb-12 text-sm text-white/50 font-mono cursor-pointer">Afficher le QRCode</p>
+            <h4 class="font-mono">ID <%= session.id.toString().replace(/\d{4}(?=.)/g, '$& ') %></h4>
+          </div>
+        </article>
+        <section class="space-y-6">
+          <h2 class="text-xl font-semibold"><%= transactions.length ? 'Transactions' : 'Aucune transaction' %></h2>
+          <ul id="list" class="space-y-6">
+
+            <% transactions.map(transaction => { %>
+
+            <li class="flex justify-between items-center bg-white px-6 py-4 rounded-2xl">
+              <div>
+                <% let other = transaction.to == session.id ? users.find(user => user.id == transaction.from) : users.find(user => user.id == transaction.to) %>
+                <h3 class="text-xl font-semibold capitalize"><%= `${ other.firstName } ${ other.lastName }` %></h3>
+                <% let moment = new Date(transaction.date) %>
+                <p class="text-sm text-black/50"><%= moment.toLocaleDateString('fr-FR') %></p>
+              </div>
+              <h4 class="font-semibold"><%= (transaction.to == session.id ? '+' : '-') + transaction.amount.toLocaleString('fr') %>€</h4>
+            </li>
+
+            <% }) %>
+
+          </ul>
+        </section>
+      </main>
+    </div>
+    <script src="https://unpkg.com/@zxing/library@0.19.1/umd/index.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      const socket = io()
+      const from = parseInt('<%= session.id %>')
+      let money = parseInt('<%= amount %>')
+
+      function handleSubmit() {
+        event.preventDefault()
+        if (from == parseInt(document.getElementById('to').value)) {
+          return alert('Vraiment ?!')
+        }
+
+        socket.emit('transaction', {
+          from: from,
+          to: parseInt(document.getElementById('to').value),
+          amount: parseInt(document.getElementById('amount').value),
+          date: new Date()
+        })
+        toggleForm()
+      }
+
+      function qrcode() {
+        document.getElementById('qrcode').classList.toggle('hidden')
+      }
+
+      function transaction() {
+        document.getElementById('transaction').classList.toggle('hidden')
+      }
+
+      function toggleScan() {
+        document.querySelectorAll('.active_scan').forEach(element => {
+          element.classList.toggle('hidden')
+        })
+      }
+
+      function toggleForm() {
+        document.querySelector('[role="send"]').classList.toggle('hidden')
+        document.querySelector('[role="load"]').classList.toggle('hidden')
+      }
+
+      function decodeOnce(codeReader, selectedDeviceId) {
+        codeReader.decodeFromInputVideoDevice(selectedDeviceId, 'video').then(result => {
+          codeReader.reset()
+          toggleScan()
+          document.getElementById('to').value = result.text
+        }).catch(err => alert(err))
+      }
+
+      function app() {
+
+        socket.on('success', data => {
+          if (from == data.from.id || from == data.to.id) {
+            const list = document.getElementById('list')
+
+            if (from == data.from.id) {
+              toggleForm()
+              transaction()
+              money = money - data.amount
+              document.getElementById('to').value = ''
+              document.getElementById('amount').value = 'amount'
+              list.insertAdjacentHTML('afterbegin', `
+                <li class="flex justify-between items-center bg-white px-6 py-4 rounded-2xl">
+                  <div>
+                    <h3 class="text-xl font-semibold capitalize">${ data.to.firstName } ${ data.to.lastName }</h3>
+                    <p class="text-sm text-black/50">${ data.date }</p>
+                  </div>
+                  <h4 class="font-semibold">-${ data.amount.toLocaleString('fr') }€</h4>
+                </li>
+              `)
+            } else {
+              money = money + data.amount
+              list.insertAdjacentHTML('afterbegin', `
+                <li class="flex justify-between items-center bg-white px-6 py-4 rounded-2xl">
+                  <div>
+                    <h3 class="text-xl font-semibold capitalize">${ data.from.firstName } ${ data.from.lastName }</h3>
+                    <p class="text-sm text-black/50">${ data.date }</p>
+                  </div>
+                  <h4 class="font-semibold">+${ data.amount.toLocaleString('fr') }€</h4>
+                </li>
+              `)
+            }
+
+            document.getElementById('money').textContent = `${ money.toLocaleString('fr') }€`
+          }
+        })
+
+        socket.on('error', () => {
+          toggleForm()
+          alert('Une erreur est survenue')
+        })
+
+        let selectedDeviceId
+        const codeReader = new ZXing.BrowserQRCodeReader()
+
+        codeReader.getVideoInputDevices().then(videoInputDevices => {
+          const sourceSelect = document.getElementById('sources')
+          selectedDeviceId = videoInputDevices[0].deviceId
+
+          if (videoInputDevices.length >= 1) {
+            videoInputDevices.forEach(element => {
+              const sourceOption = document.createElement('option')
+              sourceOption.text = element.label
+              sourceOption.value = element.deviceId
+              sourceSelect.appendChild(sourceOption)
+            })
+            sourceSelect.onchange = () => { selectedDeviceId = sourceSelect.value }
+            const sourceSelectPanel = document.getElementById('sources')
+            sourceSelectPanel.classList.remove('hidden')
+          }
+          document.getElementById('scan').addEventListener('click', () => {
+            toggleScan()
+            decodeOnce(codeReader, selectedDeviceId)
+          })
+        }).catch(err => console.error(err))
+      }
+    </script>
+  </body>
+</html>

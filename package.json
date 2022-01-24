@@ -1,0 +1,25 @@
+{
+  "name": "moula-pass",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hugolgc/Moula-Pass.git"
+  },
+  "author": "hugolgc",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/hugolgc/Moula-Pass/issues"
+  },
+  "homepage": "https://github.com/hugolgc/Moula-Pass#readme",
+  "dependencies": {
+    "ejs": "^3.1.6",
+    "express": "^4.17.2",
+    "express-session": "^1.17.2",
+    "socket.io": "^4.4.1"
+  }
+}
