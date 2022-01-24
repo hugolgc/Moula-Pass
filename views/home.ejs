@@ -8,7 +8,6 @@
     <title>Moula Pass | Votre compte</title>
     <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="/home.css">
-    <script src="https://cdn.tailwindcss.com"></script>
   </head>
   <body onload="app()" class="min-h-screen p-6 bg-gray-100 tracking-wide">
     <figure id="qrcode" onclick="qrcode()" class="hidden fixed top-0 right-0 bottom-0 left-0 flex p-6 bg-black/75 cursor-pointer">
@@ -120,7 +119,7 @@
       function handleSubmit() {
         event.preventDefault()
         if (from == parseInt(document.getElementById('to').value)) {
-          return alert('Vraiment ?!')
+          return alert('Téma la taille du rat')
         }
 
         socket.emit('transaction', {
@@ -152,11 +151,15 @@
       }
 
       function decodeOnce(codeReader, selectedDeviceId) {
+        toggleScan()
         codeReader.decodeFromInputVideoDevice(selectedDeviceId, 'video').then(result => {
+          document.getElementById('to').value = result.text
           codeReader.reset()
           toggleScan()
-          document.getElementById('to').value = result.text
-        }).catch(err => alert(err))
+        }).catch(err => {
+          toggleScan()
+          alert('Votre caméra n\'est pas disponible')
+        })
       }
 
       function app() {
@@ -207,9 +210,9 @@
 
         codeReader.getVideoInputDevices().then(videoInputDevices => {
           const sourceSelect = document.getElementById('sources')
-          selectedDeviceId = videoInputDevices[0].deviceId
-
+          
           if (videoInputDevices.length >= 1) {
+            selectedDeviceId = videoInputDevices[0].deviceId
             videoInputDevices.forEach(element => {
               const sourceOption = document.createElement('option')
               sourceOption.text = element.label
@@ -220,10 +223,7 @@
             const sourceSelectPanel = document.getElementById('sources')
             sourceSelectPanel.classList.remove('hidden')
           }
-          document.getElementById('scan').addEventListener('click', () => {
-            toggleScan()
-            decodeOnce(codeReader, selectedDeviceId)
-          })
+          document.getElementById('scan').addEventListener('click', () => decodeOnce(codeReader, selectedDeviceId))
         }).catch(err => console.error(err))
       }
     </script>
