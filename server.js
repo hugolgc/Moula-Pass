@@ -64,6 +64,16 @@ app.post('/auth', (req, res) => {
 })
 
 
+app.get('/transactions', (req, res) => {
+  if (req.session.id != 624458098151) {
+    return res.redirect('/')
+  }
+
+  const transactions = require(transactionsPath)
+  res.json(transactions)
+})
+
+
 
 io.on('connection', socket => {
   socket.on('transaction', transaction => {

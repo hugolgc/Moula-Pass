@@ -3,18 +3,24 @@
     "id": 624458098151,
     "firstName": "hugo",
     "lastName": "lagache",
-    "password": "--------"
+    "password": "-"
   },
   {
     "id": 742377299570,
     "firstName": "lucas",
     "lastName": "thirion",
-    "password": "--------"
+    "password": "reactnative"
   },
   {
     "id": 480163195134,
     "firstName": "luca",
     "lastName": "di rosso",
-    "password": "--------"
+    "password": "unrealengine"
+  },
+  {
+    "id": 444371927385,
+    "firstName": "jeremy",
+    "lastName": "piorun",
+    "password": "bite2cheval"
   }
 ]
